@@ -24,6 +24,7 @@
         'false'
         END
         ) as isOpen from sys_dept
+
     </select>
 
     <select id="list" resultType="map">

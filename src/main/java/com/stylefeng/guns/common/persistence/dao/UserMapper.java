@@ -38,11 +38,12 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 根据条件查询用户列表
-     *
+     * @Param("dataScope") DataScope dataScope,
      * @return
      * @date 2017年2月12日 下午9:14:34
      */
-    List<Map<String, Object>> selectUsers(@Param("dataScope") DataScope dataScope, @Param("name") String name, @Param("beginTime") String beginTime, @Param("endTime") String endTime, @Param("deptid") Integer deptid);
+    List<Map<String, Object>> selectUsers( @Param("name") String name, @Param("beginTime") String beginTime,
+                                          @Param("endTime") String endTime, @Param("deptid") Integer deptid,@Param("id") Integer id);
 
     /**
      * 设置用户的角色
@@ -60,4 +61,19 @@ public interface UserMapper extends Mapper<User> {
      * @date 2017年2月17日 下午11:07:46
      */
     User getByAccount(@Param("account") String account);
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
+    int insertUserInfo(User user);
+
+    /**
+     * 修改用户
+     * @param user
+     * @return
+     */
+    int modifyUserInfo(User user);
+
 }

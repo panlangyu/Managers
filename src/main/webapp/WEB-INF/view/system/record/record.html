@@ -1,0 +1,68 @@
+@layout("/common/_container.html"){
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>产品管理</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    <div class="col-sm-12">
+                        <div class="row">
+
+                            <input type="hidden" id="yinname" value="${shiro.getUser().account}"/>
+
+                            <div class="col-lg-2 col-sm-3" id ="yincan">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">产品目录</div>
+                                    <div class="panel-body dept-tree">
+                                        <ul id="deptTree" class="ztree"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-10 col-sm-9">
+                                <div class="row">
+                                    <div class="col-lg-10 col-sm-9">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-12">
+                                                <#NameCon id="account" name="用户名称" placeholder="账号/姓名/手机号"/>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-6">
+                                                <#TimeCon id="beginTime" name="注册开始日期" isTime="false" pattern="YYYY-MM-DD"/>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-6">
+                                                <#TimeCon id="endTime" name="注册结束日期" isTime="false" pattern="YYYY-MM-DD"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-sm-3">
+                                        <div class="row">
+                                            <div class="col-lg-12 col-sm-12">
+                                                <#button name="搜索" icon="fa-search" clickFun="RecordInfo.search()"/>
+                                                <#button name="重置" icon="fa-trash" clickFun="RecordInfo.resetSearch()" space="true"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" id="managerTableToolbar" role="group">
+                                    @if(shiro.hasPermission("/record/add")){
+                                    <#button name="添加" icon="fa-plus" clickFun="RecordInfo.openAddMgr()"/>
+                                    @}
+                                    @if(shiro.hasPermission("/record/edit")){
+                                    <#button name="修改" icon="fa-edit" clickFun="RecordInfo.openChangeRecord()" space="true"/>
+                                    @}
+                                    @if(shiro.hasPermission("/record/delete")){
+                                    <#button name="删除" icon="fa-remove" clickFun="RecordInfo.delRecordInfo()" space="true"/>
+                                    @}
+                                </div>
+                                <#table id="recordTable"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="${ctxPath}/static/modular/system/record/record.js"></script>
+@}

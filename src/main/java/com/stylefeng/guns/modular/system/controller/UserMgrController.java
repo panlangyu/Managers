@@ -6,11 +6,14 @@ import com.stylefeng.guns.common.constant.Const;
 import com.stylefeng.guns.common.constant.Dict;
 import com.stylefeng.guns.common.constant.factory.ConstantFactory;
 import com.stylefeng.guns.common.constant.state.ManagerStatus;
+import com.stylefeng.guns.common.constant.tips.SuccessTip;
 import com.stylefeng.guns.common.constant.tips.Tip;
 import com.stylefeng.guns.common.controller.BaseController;
 import com.stylefeng.guns.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.common.exception.BussinessException;
+import com.stylefeng.guns.common.persistence.dao.RecordMapper;
 import com.stylefeng.guns.common.persistence.dao.UserMapper;
+import com.stylefeng.guns.common.persistence.model.Record;
 import com.stylefeng.guns.common.persistence.model.User;
 import com.stylefeng.guns.config.properties.GunsProperties;
 import com.stylefeng.guns.core.datascope.DataScope;
@@ -20,7 +23,10 @@ import com.stylefeng.guns.core.shiro.ShiroUser;
 import com.stylefeng.guns.core.util.ToolUtil;
 import com.stylefeng.guns.modular.system.factory.UserFactory;
 import com.stylefeng.guns.modular.system.transfer.UserDto;
+import com.stylefeng.guns.modular.system.transfer.UserVo;
 import com.stylefeng.guns.modular.system.warpper.UserWarpper;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,10 +37,7 @@ import javax.annotation.Resource;
 import javax.naming.NoPermissionException;
 import javax.validation.Valid;
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 系统管理员控制器
@@ -53,6 +56,9 @@ public class UserMgrController extends BaseController {
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private RecordMapper recordMapper;
 
     /**
      * 跳转到查看管理员列表的页面
@@ -89,18 +95,37 @@ public class UserMgrController extends BaseController {
      * 跳转到编辑管理员页面
      */
     @Permission
-    @RequestMapping("/user_edit/{userId}")
-    public String userEdit(@PathVariable Integer userId, Model model) {
+    @RequestMapping("/user_edit")
+    public String userEdit(@RequestParam Integer userId,@RequestParam(required = false)Integer recordId,Model model) {
+
         if (ToolUtil.isEmpty(userId)) {
             throw new BussinessException(BizExceptionEnum.REQUEST_NULL);
         }
         assertAuth(userId);
-        User user = userMapper.selectByPrimaryKey(userId);
-        model.addAttribute(user);
-        model.addAttribute("roleName", ConstantFactory.me().getRoleName(user.getRoleid()));
-        model.addAttribute("deptName", ConstantFactory.me().getDeptName(user.getDeptid()));
-        LogObjectHolder.me().set(user);
+
+        if(recordId != null && recordId != 0){
+
+            Record record = recordMapper.selectRecordById(recordId);
+            model.addAttribute(record);
+            model.addAttribute("roleName", ConstantFactory.me().getRoleName(record.getRoleid()));
+            model.addAttribute("deptName", ConstantFactory.me().getDeptName(record.getDeptid()));
+            LogObjectHolder.me().set(record);
+
+            return "/system/record/record_edit.html";
+
+        }else {
+            User user = userMapper.selectByPrimaryKey(userId);
+
+            //Record record = recordMapper.selectRecordById(id);
+            model.addAttribute(user);
+            model.addAttribute("roleName", ConstantFactory.me().getRoleName(user.getRoleid()));
+            //model.addAttribute("deptName", ConstantFactory.me().getDeptName(record.getDeptid()));
+            LogObjectHolder.me().set(user);
+
+        }
+
         return PREFIX + "user_edit.html";
+
     }
 
     /**
@@ -156,11 +181,13 @@ public class UserMgrController extends BaseController {
     @RequestMapping("/list")
     @Permission
     @ResponseBody
-    public Object list(@RequestParam(required = false) String name, @RequestParam(required = false) String beginTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer deptid) {
+    public Object list(@RequestParam(required = false) String account, @RequestParam(required = false) String beginTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer deptid) {
         Integer userId = ShiroKit.getUser().getId();
-        User user = userMapper.selectByPrimaryKey(userId);
-        DataScope dataScope = new DataScope(ShiroKit.getDeptDataScope(user));
-        List<Map<String, Object>> users = userMapper.selectUsers(dataScope, name, beginTime, endTime, deptid);
+        //User user = userMapper.selectByPrimaryKey(userId);
+        //DataScope dataScope = new DataScope(ShiroKit.getDeptDataScope(user));
+
+        //List<Map<String, Object>> users = recordMapper.selectRecordInfo( account, beginTime, endTime, deptid,userId);
+        List<Map<String, Object>> users = userMapper.selectUsers(account, beginTime, endTime, deptid,userId);
         return new UserWarpper(users).warp();
     }
 
@@ -171,24 +198,23 @@ public class UserMgrController extends BaseController {
     @BussinessLog(value = "添加管理员", key = "account", dict = Dict.UserDict)
     @Permission(Const.ADMIN_NAME)
     @ResponseBody
-    public Tip add(@Valid UserDto user, BindingResult result) {
+    public Tip add(@Valid UserVo user, BindingResult result) {
         if (result.hasErrors()) {
             throw new BussinessException(BizExceptionEnum.REQUEST_NULL);
         }
 
-        // 判断账号是否重复
-        User theUser = userMapper.getByAccount(user.getAccount());
-        if (theUser != null) {
-            throw new BussinessException(BizExceptionEnum.USER_ALREADY_REG);
-        }
+        User userInfo = new User();         //用户信息
 
         // 完善账号信息
         user.setSalt(ShiroKit.getRandomSalt(5));
         user.setPassword(ShiroKit.md5(user.getPassword(), user.getSalt()));
         user.setStatus(ManagerStatus.OK.getCode());
-        user.setCreatetime(new Date());
+        //user.setCreatetime(new Date());
 
-        userMapper.insert(UserFactory.createUser(user));
+        userInfo =  UserFactory.createUser(user);           //转换成用户对象
+
+        userMapper.insertUserInfo(userInfo);
+
         return SUCCESS_TIP;
     }
 
@@ -200,23 +226,32 @@ public class UserMgrController extends BaseController {
     @RequestMapping("/edit")
     @BussinessLog(value = "修改管理员", key = "account", dict = Dict.UserDict)
     @ResponseBody
-    public Tip edit(@Valid UserDto user, BindingResult result) throws NoPermissionException {
+    public Tip edit(@Valid UserVo user, BindingResult result) throws NoPermissionException {
         if (result.hasErrors()) {
             throw new BussinessException(BizExceptionEnum.REQUEST_NULL);
         }
+
+        User userInfo = new User();
+
+        userInfo = UserFactory.createUser(user);
+
         if (ShiroKit.hasRole(Const.ADMIN_NAME)) {
-            userMapper.updateByPrimaryKeySelective(UserFactory.createUser(user));
+
+            userMapper.modifyUserInfo(userInfo);
+
             return SUCCESS_TIP;
         } else {
             assertAuth(user.getId());
             ShiroUser shiroUser = ShiroKit.getUser();
             if (shiroUser.getId().equals(user.getId())) {
-                userMapper.updateByPrimaryKeySelective(UserFactory.createUser(user));
+                //userInfo = UserFactory.createUser(user);
+                userMapper.modifyUserInfo(userInfo);
                 return SUCCESS_TIP;
             } else {
                 throw new BussinessException(BizExceptionEnum.NO_PERMITION);
             }
         }
+
     }
 
     /**
@@ -357,4 +392,69 @@ public class UserMgrController extends BaseController {
         }
 
     }
+
+
+    /**
+     * 查看用户是否存在
+     */
+    @RequestMapping( value = "/accountISExists",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> accountISExists(@RequestParam("account")String account,
+                                              @RequestParam(name = "zhanghu",required = false)String zhanghu) {
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("code",200);
+        map.put("type","success");
+        map.put("data","用户名可以使用");
+
+        //判断账户是否存在
+        if(StringUtils.isNotBlank(zhanghu)){
+
+            //验证是否是当前用户修改,就不用去查直接方形
+            if(account.equals(zhanghu)){
+
+                return map;
+            }
+
+            // 判断账号是否重复
+            map = findAccountIsExists(account);
+
+        }else{
+
+            // 判断账号是否重复
+            map = findAccountIsExists(account);
+
+        }
+
+        return map;
+    }
+
+
+    //查询账户是否存在
+    private Map<String,Object> findAccountIsExists(String account){
+
+        Map<String,Object> map = new HashMap<>();
+
+        // 判断账号是否重复
+        User theUser = userMapper.getByAccount(account);
+
+        if (theUser != null) {
+
+            map.put("code",1001);
+            map.put("type","error");
+            map.put("data","用户名已存在");
+
+            return map;
+        }
+
+        map.put("code",200);
+        map.put("type","success");
+        map.put("data","用户名可以使用");
+        return map;
+    }
+
+
+
+
 }

@@ -13,6 +13,9 @@ import java.util.Date;
 public class UserDto{
 
 	private Integer id;
+
+	private Integer userId;
+
 	private String account;
 	private String password;
 	private String salt;
@@ -26,10 +29,89 @@ public class UserDto{
 	private String roleid;
 	private Integer deptid;
 	private Integer status;
-	private Date createtime;
+	private String createtime;
+
+
 	private Integer version;
 	private String avatar;
 
+	private String management;		//管理费
+
+	private String employeeNum;	//管理分成
+
+	private String mechanism;		//客户净含量
+
+	private String salesagency;		//销售机构
+
+	private String updatetime;		//修改日期
+
+	private String nums;			//截止日期数量
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public String getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(String customerType) {
+		this.customerType = customerType;
+	}
+
+	private String customerType;    //客户类型
+
+	public String getManagement() {
+		return management;
+	}
+
+	public void setManagement(String management) {
+		this.management = management;
+	}
+
+	public String getEmployeeNum() {
+		return employeeNum;
+	}
+
+	public void setEmployeeNum(String employeeNum) {
+		this.employeeNum = employeeNum;
+	}
+
+	public String getMechanism() {
+		return mechanism;
+	}
+
+	public void setMechanism(String mechanism) {
+		this.mechanism = mechanism;
+	}
+
+	public String getSalesagency() {
+		return salesagency;
+	}
+
+	public void setSalesagency(String salesagency) {
+		this.salesagency = salesagency;
+	}
+
+	public String getUpdatetime() {
+		return updatetime;
+	}
+
+	public void setUpdatetime(String updatetime) {
+		this.updatetime = updatetime;
+	}
+
+	public String getNums() {
+		return nums;
+	}
+
+	public void setNums(String nums) {
+		this.nums = nums;
+	}
 
 	public Integer getId() {
 		return id;
@@ -127,11 +209,11 @@ public class UserDto{
 		this.status = status;
 	}
 
-	public Date getCreatetime() {
+	public String getCreatetime() {
 		return createtime;
 	}
 
-	public void setCreatetime(Date createtime) {
+	public void setCreatetime(String createtime) {
 		this.createtime = createtime;
 	}
 

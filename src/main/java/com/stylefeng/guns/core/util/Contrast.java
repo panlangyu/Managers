@@ -29,7 +29,7 @@ public class Contrast {
      * @Date 2017/5/9 19:34
      */
     public static String contrastObj(Object pojo1, Object pojo2) {
-        String str = "";
+        /*String str = "";
         try {
             Class clazz = pojo1.getClass();
             Field[] fields = pojo1.getClass().getDeclaredFields();
@@ -59,7 +59,8 @@ public class Contrast {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return str;
+        return str;*/
+        return null;
     }
 
     /**

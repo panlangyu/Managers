@@ -1,7 +1,5 @@
 package com.stylefeng.guns.common.persistence.model;
 
-import java.util.Date;
-
 import javax.persistence.Table;
 
 /**
@@ -40,7 +38,7 @@ public class User extends Base {
     /**
      * 生日
      */
-    private Date    birthday;
+    private String    birthday;
     /**
      * 性别（1：男 2：女）
      */
@@ -68,11 +66,46 @@ public class User extends Base {
     /**
      * 创建时间
      */
-    private Date    createtime;
+    private String createtime;
     /**
      * 保留字段
      */
     private Integer version;
+
+    /**
+     * 管理费
+     */
+    private String management;
+
+    /**
+     * 管理分成
+     */
+    private String employeeNum;
+
+    /**
+     * 客户净含量
+     */
+    private String mechanism;
+
+    /**
+     * 销售机构
+     */
+    private String salesagency;
+
+    /**
+     * 修改时间
+     */
+    private String updatetime;
+
+    private String customerType;    //客户类型
+
+    private String nums;			//截止日期数量
+
+
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public String getAvatar() {
         return avatar;
@@ -80,6 +113,14 @@ public class User extends Base {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
     public String getAccount() {
@@ -114,21 +155,14 @@ public class User extends Base {
         this.name = name;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    public Integer getSex() {
-        return sex;
-    }
-
-    public void setSex(Integer sex) {
-        this.sex = sex;
-    }
 
     public String getEmail() {
         return email;
@@ -154,6 +188,62 @@ public class User extends Base {
         this.roleid = roleid;
     }
 
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getManagement() {
+        return management;
+    }
+
+    public void setManagement(String management) {
+        this.management = management;
+    }
+
+    public String getEmployeeNum() {
+        return employeeNum;
+    }
+
+    public void setEmployeeNum(String employeeNum) {
+        this.employeeNum = employeeNum;
+    }
+
+    public String getMechanism() {
+        return mechanism;
+    }
+
+    public void setMechanism(String mechanism) {
+        this.mechanism = mechanism;
+    }
+
+    public String getSalesagency() {
+        return salesagency;
+    }
+
+    public void setSalesagency(String salesagency) {
+        this.salesagency = salesagency;
+    }
+
+    public String getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(String updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String getNums() {
+        return nums;
+    }
+
+    public void setNums(String nums) {
+        this.nums = nums;
+    }
+
     public Integer getDeptid() {
         return deptid;
     }
@@ -170,20 +260,20 @@ public class User extends Base {
         this.status = status;
     }
 
-    public Date getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(Date createtime) {
-        this.createtime = createtime;
-    }
-
     public Integer getVersion() {
         return version;
     }
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
     @Override
@@ -204,6 +294,12 @@ public class User extends Base {
                 ", status=" + status +
                 ", createtime=" + createtime +
                 ", version=" + version +
+                ", management=" + management +
+                ", employeeNum=" + employeeNum +
+                ", mechanism=" + mechanism +
+                ", salesagency=" + salesagency +
+                ", updatetime=" + updatetime +
+                ", customerType=" + customerType +
                 "}";
     }
 }

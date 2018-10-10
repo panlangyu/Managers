@@ -9,9 +9,14 @@
 				<div class="row row-lg">
 					<div class="col-sm-12">
 						<div class="row">
-							<div class="col-lg-2 col-sm-3">
+
+							<input type="hidden" id="yinname" value="${shiro.getUser().account}"/>
+
+
+
+							<div class="col-lg-2 col-sm-3" id ="yincan">
 								<div class="panel panel-default">
-									<div class="panel-heading">组织机构</div>
+									<div class="panel-heading">用户目录</div>
 									<div class="panel-body dept-tree">
 										<ul id="deptTree" class="ztree"></ul>
 									</div>
@@ -22,7 +27,7 @@
 									<div class="col-lg-10 col-sm-9">
 										<div class="row">
 											<div class="col-lg-4 col-sm-12">
-												<#NameCon id="name" name="用户名称" placeholder="帐号/姓名/手机号"/>
+												<#NameCon id="account" name="用户名称" placeholder="账号/姓名/手机号"/>
 											</div>
 											<div class="col-lg-4 col-sm-6">
 												<#TimeCon id="beginTime" name="注册开始日期" isTime="false" pattern="YYYY-MM-DD"/>

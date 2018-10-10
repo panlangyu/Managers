@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.stylefeng.guns.common.persistence.dao.RecordMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.stylefeng.guns.common.persistence.model.Record">
+		<id column="id" property="id" />
+        <result column="userId" property="userId" />
+		<result column="avatar" property="avatar" />
+		<result column="account" property="account" />
+		<result column="name" property="name" />
+		<result column="birthday" property="birthday" />
+        <result column="password" property="password" />
+		<result column="email" property="email" />
+        <result column="sex" property="sex" />
+		<result column="phone" property="phone" />
+        <result column="userId" property="userId" />
+		<result column="roleid" property="roleid" />
+        <result column="salt" property="salt" />
+		<result column="deptid" property="deptid" />
+		<!--<result column="status" property="status" />-->
+		<result column="version" property="version" />
+        <result column="management" property="management" />
+        <result column="employee_num" property="employeeNum" />
+        <result column="mechanism" property="mechanism" />
+        <result column="salesagency" property="salesagency" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="nums" property="nums" />
+        <result column="customer_type" property="customerType" />
+	</resultMap>
+
+    <sql id="Base_Column_List">
+
+         r.id,userId,avatar,account,`name`,birthday,`password`,r.email,r.sex,phone,userId,
+         roleid,salt,r.deptid,`status`,r.`version`,r.management,
+         r.employee_num,r.mechanism,r.salesagency,r.createtime,
+         r.updatetime,r.nums,r.customer_type
+
+    </sql>
+
+
+
+    <select id="selectRecordInfo" resultType="map">
+        SELECT
+
+        <include refid="Base_Column_List"/>
+
+        FROM sys_record r
+        INNER JOIN sys_user u ON userId = u.id
+        WHERE `status` != 3
+
+
+        <!-- amdin超级管理员为 1,查所有 -->
+        <if test="id != null and id != 1">
+
+            AND userId = #{id}
+
+        </if>
+
+        <if test="name != null and name.length() > 0 ">
+
+            AND `account`  LIKE CONCAT('%',#{name},'%')
+            OR phone LIKE CONCAT('%',#{name},'%')
+            OR `name` LIKE CONCAT('%',#{name},'%')
+
+        </if>
+
+        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+
+            AND r.createtime >= #{beginTime} AND r.updatetime &lt;= #{endTime}
+
+        </if>
+
+        <if test="deptid != null and deptid != 0 ">
+
+            AND r.deptid = #{deptid}
+
+        </if>
+
+        ORDER BY r.createtime DESC
+
+    </select>
+
+    <!-- 添加用户投资记录 -->
+    <insert id="insertRecordInfo" parameterType="com.stylefeng.guns.common.persistence.model.Record">
+
+        INSERT INTO sys_record(
+            userId,`version`,management,employee_num,
+            mechanism,salesagency,createtime,updatetime,
+            nums,customer_type,email,deptid,sex
+        )
+        VALUE(
+            #{userId},#{version},#{management},#{employeeNum},
+            #{mechanism},#{salesagency},#{createtime},#{updatetime},
+            #{nums},#{customerType},#{email},#{deptid},#{sex}
+        )
+
+    </insert>
+
+
+    <select id="selectRecordById" resultMap="BaseResultMap">
+        SELECT
+
+        <include refid="Base_Column_List"/>
+
+        FROM sys_record r
+        INNER JOIN sys_user u ON userId = u.id
+        WHERE `status` != 3
+
+        <!-- amdin超级管理员为 1,查所有 -->
+        <if test="id != null and id != 0">
+
+            AND r.id = #{id}
+
+        </if>
+
+    </select>
+
+
+    <!-- 修改用户信息 -->
+    <update id="modifyRecordInfo" parameterType="com.stylefeng.guns.common.persistence.model.Record">
+
+        UPDATE sys_record SET
+
+        userId = #{userId},version = #{version},management = #{management},
+        employee_num = #{employeeNum},mechanism = #{mechanism},
+        salesagency = #{salesagency},createtime = #{createtime},
+        updatetime = #{updatetime},nums = #{nums},customer_type = #{customerType},
+        email = #{email},deptid = #{deptid},sex = #{sex}
+
+        WHERE id = #{id}
+
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="deleteRecordInfo" parameterType="java.lang.Integer">
+
+            DELETE FROM sys_record
+            WHERE id = #{id}
+
+    </delete>
+
+
+</mapper>

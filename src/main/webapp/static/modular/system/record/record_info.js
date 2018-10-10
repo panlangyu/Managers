@@ -57,41 +57,6 @@ UserInfoDlg.clearData = function () {
     this.userInfoData = {};
 };
 
-
-//验证用户是否存在 blur 离开事件 验证用户是否存在
-var flag = true;
-$("#account").blur(function(){
-
-    flag = true;                        //在没有错误的情况下 为 true
-    var account = $(this).val();
-    var zhanghu = $("#zhanghu").val();  //账户
-
-    $.ajax({
-        url: Feng.ctxPath+"/mgr/accountISExists",
-        type: "GET",
-        data: {"account":account,"zhanghu":zhanghu},
-        dataType: "json",
-        success: function(data) {
-
-            if(data.type == "error"){
-
-                Feng.error(data.data);
-                flag = false;
-                return flag;
-            }
-
-            Feng.success(data.data);
-        },error:function(data){
-            Feng.error("请求错误");
-        }
-
-    });
-
-    return flag;
-
-});
-
-
 /**
  * 设置对话框中的数据
  *
@@ -117,7 +82,7 @@ UserInfoDlg.get = function (key) {
  * 关闭此对话框
  */
 UserInfoDlg.close = function () {
-    parent.layer.close(window.parent.MgrUser.layerIndex);
+    parent.layer.close(window.parent.RecordInfo.layerIndex);
 };
 
 /**
@@ -176,17 +141,12 @@ UserInfoDlg.hideDeptSelectTree = function () {
 /**
  * 收集数据
  */
-/*UserInfoDlg.collectData = function () {
-    this.set('id').set('userId').set('account').set('sex').set('password').set('avatar')
-        .set('email').set('name').set('birthday').set('rePassword').set('deptid').set('phone').set('management')
-        .set('employeeNum').set('mechanism').set('salesagency').set('nums').set('createtime').set('updatetime').set('customerType');
-};*/
-/**收集用户数据**/
 UserInfoDlg.collectData = function () {
-    this.set('id').set('account').set('password').set('avatar').set('salt')
-        .set('name').set('birthday').set('rePassword').set('phone');
+    this.set('id').set('userId').set('account').set('sex')
+        .set('email').set('deptid').set('phone').set('management')
+        .set('employeeNum').set('mechanism').set('salesagency').set('nums')
+        .set('createtime').set('updatetime').set('customerType');
 };
-
 
 /**
  * 验证两个密码是否一致
@@ -211,17 +171,13 @@ UserInfoDlg.validate = function () {
 };
 
 /**
- * 提交添加用户
+ * 提交添加产品记录
  */
 UserInfoDlg.addSubmit = function () {
 
+
     this.clearData();
     this.collectData();
-
-    if(!flag){
-        Feng.error("用户名已被使用,换一个吧 ☹");
-        return;
-    }
 
     if (!this.validate()) {
         return;
@@ -232,12 +188,10 @@ UserInfoDlg.addSubmit = function () {
         return;
     }
 
-
-
     //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/mgr/add", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/record/add", function (data) {
         Feng.success("添加成功!");
-        window.parent.MgrUser.table.refresh();
+        window.parent.RecordInfo.table.refresh();
         UserInfoDlg.close();
     }, function (data) {
         Feng.error("添加失败!" + data.responseJSON.message + "!");
@@ -254,20 +208,15 @@ UserInfoDlg.editSubmit = function () {
     this.clearData();
     this.collectData();
 
-    if(!flag){
-        Feng.error("用户名已被使用,换一个吧 ☹");
-        return;
-    }
-
     if (!this.validate()) {
         return;
     }
 
     //提交信息
-    var ajax = new $ax(Feng.ctxPath + "/mgr/edit", function (data) {
+    var ajax = new $ax(Feng.ctxPath + "/record/edit", function (data) {
         Feng.success("修改成功!");
-        if (window.parent.MgrUser != undefined) {
-            window.parent.MgrUser.table.refresh();
+        if (window.parent.RecordInfo != undefined) {
+            window.parent.RecordInfo.table.refresh();
             UserInfoDlg.close();
         }
     }, function (data) {
@@ -277,25 +226,11 @@ UserInfoDlg.editSubmit = function () {
     ajax.start();
 };
 
-/**
- * 修改密码
- */
-UserInfoDlg.chPwd = function () {
-    var ajax = new $ax(Feng.ctxPath + "/mgr/changePwd", function (data) {
-        Feng.success("修改成功!");
-    }, function (data) {
-        Feng.error("修改失败!" + data.responseJSON.message + "!");
-    });
-    ajax.set("oldPwd");
-    ajax.set("newPwd");
-    ajax.set("rePwd");
-    ajax.start();
 
-};
 
 function onBodyDown(event) {
     if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(
-            event.target).parents("#menuContent").length > 0)) {
+        event.target).parents("#menuContent").length > 0)) {
         UserInfoDlg.hideDeptSelectTree();
     }
 }
@@ -313,6 +248,18 @@ function getTime(){
 }
 
 
+//修改页面直接加载部门编号
+function loadDeptId(){
+
+    var bumen = $("#bumenId").val();
+
+    $("#deptid").val(bumen);
+
+}
+
+
+
+
 $(function () {
     Feng.initValidator("userInfoForm", UserInfoDlg.validateFields);
 
@@ -324,6 +271,7 @@ $(function () {
     //初始化性别选项
     $("#sex").val($("#sexValue").val());
 
+    loadDeptId();       //修改时加载部门信息
     getTime();          //获取时间
 
     // 初始化头像上传

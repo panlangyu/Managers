@@ -16,17 +16,27 @@ MgrUser.initColumn = function () {
     var columns = [
         {field: 'selectItem', radio: true},
         {title: 'id', field: 'id', visible: false, align: 'center', valign: 'middle'},
+        /*{title: 'userId', field: 'userId', visible: false, align: 'center', valign: 'middle'},*/
         {title: '账号', field: 'account', align: 'center', valign: 'middle', sortable: true},
         {title: '姓名', field: 'name', align: 'center', valign: 'middle', sortable: true},
-        {title: '性别', field: 'sexName', align: 'center', valign: 'middle', sortable: true},
-        {title: '角色', field: 'roleName', align: 'center', valign: 'middle', sortable: true},
-        {title: '部门', field: 'deptName', align: 'center', valign: 'middle', sortable: true},
-        {title: '邮箱', field: 'email', align: 'center', valign: 'middle', sortable: true},
-        {title: '电话', field: 'phone', align: 'center', valign: 'middle', sortable: true},
+        {title: '手机', field: 'phone', align: 'center', valign: 'middle', sortable: true},
         {title: '创建时间', field: 'createtime', align: 'center', valign: 'middle', sortable: true},
-        {title: '状态', field: 'statusName', align: 'center', valign: 'middle', sortable: true}];
+        {title: '修改时间', field: 'updatetime', align: 'center', valign: 'middle', sortable: true},
+        /*{title: '客户类型', field: 'customer_type', align: 'center', valign: 'middle', sortable: true},
+        {title: '产品名称', field: 'deptName', align: 'center', valign: 'middle', sortable: true},
+        {title: '产品代码', field: 'email', align: 'center', valign: 'middle', sortable: true},
+        {title: '产品类别', field: 'sexName', align: 'center', valign: 'middle', sortable: true},
+        {title: '截止日期数量', field: 'nums', align: 'center', valign: 'middle', sortable: true},
+        {title: '管理费', field: 'management', align: 'center', valign: 'middle', sortable: true},
+        {title: '管理分成', field: 'employee_num', align: 'center', valign: 'middle', sortable: true},
+        {title: '客户净数量', field: 'mechanism', align: 'center', valign: 'middle', sortable: true},
+        {title: '销售机构', field: 'salesagency', align: 'center', valign: 'middle', sortable: true}*/
+        ];
     return columns;
 };
+
+
+
 
 /**
  * 检查是否选中
@@ -49,7 +59,7 @@ MgrUser.openAddMgr = function () {
     var index = layer.open({
         type: 2,
         title: '添加管理员',
-        area: ['800px', '560px'], //宽高
+        area: ['550px', '700px'], //宽高
         fix: false, //不固定
         maxmin: true,
         content: Feng.ctxPath + '/mgr/user_add'
@@ -66,10 +76,10 @@ MgrUser.openChangeUser = function () {
         var index = layer.open({
             type: 2,
             title: '编辑管理员',
-            area: ['800px', '450px'], //宽高
+            area: ['550px', '700px'], //宽高
             fix: false, //不固定
             maxmin: true,
-            content: Feng.ctxPath + '/mgr/user_edit/' + this.seItem.id
+            content: Feng.ctxPath + '/mgr/user_edit?userId=' + this.seItem.id
         });
         this.layerIndex = index;
     }
@@ -183,8 +193,9 @@ MgrUser.resetSearch = function () {
 MgrUser.search = function () {
     var queryData = {};
 
+
     queryData['deptid'] = MgrUser.deptid;
-    queryData['name'] = $("#name").val();
+    queryData['account'] = $("#account").val();
     queryData['beginTime'] = $("#beginTime").val();
     queryData['endTime'] = $("#endTime").val();
 
@@ -196,6 +207,18 @@ MgrUser.onClickDept = function (e, treeId, treeNode) {
     MgrUser.search();
 };
 
+function checkss(){
+
+    var yincang = $("#yinname").val();
+
+    if(yincang != "admin"){
+
+        $("#yincan").css("display","none");
+    }
+
+}
+
+
 $(function () {
     var defaultColunms = MgrUser.initColumn();
     var table = new BSTable("managerTable", "/mgr/list", defaultColunms);
@@ -204,4 +227,7 @@ $(function () {
     var ztree = new $ZTree("deptTree", "/dept/tree");
     ztree.bindOnClick(MgrUser.onClickDept);
     ztree.init();
+
+    checkss();
+
 });

@@ -26,7 +26,7 @@ public enum BizExceptionEnum {
 	 * 权限和数据问题
 	 */
 	DB_RESOURCE_NULL(400,"数据库中没有该资源"),
-	NO_PERMITION(405, "权限异常"),
+	NO_PERMITION(4005, "权限异常"),
 	REQUEST_INVALIDATE(400,"请求数据格式不正确"),
 	INVALID_KAPTCHA(400,"验证码不正确"),
 	CANT_DELETE_ADMIN(600,"不能删除超级管理员"),
@@ -37,11 +37,13 @@ public enum BizExceptionEnum {
 	 * 账户问题
 	 */
 	USER_ALREADY_REG(401,"该用户已经注册"),
-	NO_THIS_USER(400,"没有此用户"),
+	NO_THIS_USER(400,"没有此用户,请先注册"),
 	USER_NOT_EXISTED(400, "没有此用户"),
 	ACCOUNT_FREEZED(401, "账号被冻结"),
 	OLD_PWD_NOT_RIGHT(402, "原密码不正确"),
 	TWO_PWD_NOT_MATCH(405, "两次输入密码不一致"),
+	USER_INSERT_ERROR(406,"新增失败"),
+	USER_MODIFY_ERROR(507,"更新失败"),
 
 	/**
 	 * 错误的请求
@@ -52,6 +54,9 @@ public enum BizExceptionEnum {
 	REQUEST_NULL(400, "请求有错误"),
 	SESSION_TIMEOUT(400, "会话超时"),
 	SERVER_ERROR(500, "服务器异常");
+
+
+
 
 	BizExceptionEnum(int code, String message) {
 		this.friendlyCode = code;

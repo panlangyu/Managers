@@ -19,38 +19,69 @@
 		<result column="status" property="status" />
 		<result column="createtime" property="createtime" />
 		<result column="version" property="version" />
+        <result column="management" property="management" />
+        <result column="employee_num" property="employeeNum" />
+        <result column="mechanism" property="mechanism" />
+        <result column="salesagency" property="salesagency" />
+        <result column="updatetime" property="updatetime" />
+        <result column="nums" property="nums" />
+        <result column="customer_type" property="customerType" />
 	</resultMap>
 
     <sql id="Base_Column_List">
         id, account, name, birthday, sex, email, avatar,
         phone, roleid,
         deptid, status,
-        createtime, version
+        createtime, version,management,
+        employee_num,mechanism,salesagency,updatetime,nums,customer_type
     </sql>
 
     <sql id="Base_Column_List_With_Pwd">
         id, account, name, birthday,password, sex, email, avatar,
         phone, roleid,salt,
         deptid, status,
-        createtime, version
+        createtime, version,management,
+        employee_num,mechanism,salesagency,updatetime,nums,customer_type
     </sql>
+
+    <sql id="Base_Column_ListInfo">
+       id,avatar,`account`,`password`,salt,`name`,
+       birthday,phone,roleid,createtime,updatetime
+    </sql>
+
+
 
     <select id="selectUsers" resultType="map">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_ListInfo"/>
         from sys_user
         where status != 3
+
         <if test="name != null and name != ''">
-            and (phone like CONCAT('%',#{name},'%')
-            or account like CONCAT('%',#{name},'%')
-            or name like CONCAT('%',#{name},'%'))
+            AND `account`  LIKE CONCAT('%',#{name},'%')
+            OR phone LIKE CONCAT('%',#{name},'%')
+            OR `name` LIKE CONCAT('%',#{name},'%')
         </if>
-        <if test="deptid != null and deptid != 0">
-            and (deptid = #{deptid} or deptid in ( select id from sys_dept where pids like CONCAT('%[', #{deptid}, ']%') ))
-        </if>
-        <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
-            and (createTime between CONCAT(#{beginTime},' 00:00:00') and CONCAT(#{endTime},' 23:59:59'))
-        </if>
+
+        <choose>
+            <when test="beginTime != null and beginTime.length() > 0 and endTime != null and endTime.length() > 0">
+
+                AND createtime BETWEEN #{beginTime} AND #{endTime}
+
+            </when>
+            <when test="beginTime != null and beginTime.length() > 0">
+
+                AND createtime >= #{beginTime}
+
+            </when>
+            <when test="endTime != null and endTime.length() > 0">
+
+                AND updatetime &lt;= #{endTime}
+
+            </when>
+
+        </choose>
+
     </select>
 
     <update id="setStatus">
@@ -73,5 +104,35 @@
         <include refid="Base_Column_List_With_Pwd"/>
         FROM sys_user where account = #{account} and status != 3
     </select>
+
+
+    <!-- 添加用户信息 -->
+    <insert id="insertUserInfo" parameterType="com.stylefeng.guns.common.persistence.model.User"  useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
+
+        INSERT INTO sys_user(
+          avatar,account,`password`,salt,`name`,
+          birthday,phone,roleid,`status`,createtime
+        )
+        VALUES(
+          #{avatar},#{account},#{password},#{salt},#{name},
+          #{birthday},#{phone},#{roleid},#{status},NOW()
+        )
+
+
+    </insert>
+
+    <!-- 修改用户信息 -->
+    <update id="modifyUserInfo" parameterType="com.stylefeng.guns.common.persistence.model.User">
+
+        UPDATE sys_user SET
+
+        avatar = #{avatar},account = #{account},`name` = #{name},
+        birthday = #{birthday},phone = #{phone},updatetime = NOW()
+
+        WHERE id = #{id}
+
+    </update>
+
 
 </mapper>

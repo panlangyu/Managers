@@ -15,7 +15,8 @@ guns:
 
 ###################  项目启动端口  ###################
 server:
-  port: 8080
+  port: 8081
+  context-path: /manager
 
 
 ###################  MyBatis 配置  ###################
@@ -73,17 +74,19 @@ spring:
 spring:
   profiles: dev
   datasource:
-      url: jdbc:mysql://127.0.0.1:3306/guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://39.105.26.249:3306/guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+      #url: jdbc:mysql://localhost:3306/guns?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
       username: root
-      password:
+      password: 68d63351097d882f
+      #password: 123456
       filters: log4j,wall,mergeStat
 
 #多数据源
 biz:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/biz?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://39.105.26.249:3306/biz?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
     username: root
-    password:
+    password: 68d63351097d882f
 
 logging:
   level.root: info
