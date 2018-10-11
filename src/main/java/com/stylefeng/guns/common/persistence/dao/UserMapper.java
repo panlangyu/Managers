@@ -32,6 +32,7 @@ public interface UserMapper extends Mapper<User> {
      *
      * @param userId
      * @param pwd
+     *
      * @date 2017年2月12日 下午8:54:19
      */
     int changePwd(@Param("userId") Integer userId, @Param("pwd") String pwd);
