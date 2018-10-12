@@ -145,6 +145,7 @@ RecordInfo.search = function () {
     queryData['account'] = $("#account").val();
     queryData['beginTime'] = $("#beginTime").val();
     queryData['endTime'] = $("#endTime").val();
+    queryData['sex'] = $("#sex").val();
 
     RecordInfo.table.refresh({query: queryData});
 }

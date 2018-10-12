@@ -78,6 +78,12 @@
 
         </if>
 
+        <if test="sex != null and sex != 0 ">
+
+            AND r.sex = #{sex}
+
+        </if>
+
         ORDER BY r.createtime DESC
 
     </select>

@@ -100,12 +100,13 @@ public class RecordController extends BaseController {
     @RequestMapping("/list")
     @Permission
     @ResponseBody
-    public Object list(@RequestParam(required = false) String account, @RequestParam(required = false) String beginTime, @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer deptid) {
+    public Object list(@RequestParam(required = false) String account, @RequestParam(required = false) String beginTime,
+                       @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer deptid,@RequestParam(required = false)Integer sex) {
         Integer userId = ShiroKit.getUser().getId();
         //User user = userMapper.selectByPrimaryKey(userId);
         //DataScope dataScope = new DataScope(ShiroKit.getDeptDataScope(user));
         //dataScope
-        List<Map<String, Object>> users = recordMapper.selectRecordInfo( account, beginTime, endTime, deptid,userId);
+        List<Map<String, Object>> users = recordMapper.selectRecordInfo( account, beginTime, endTime, deptid,userId,sex);
         return new UserWarpper(users).warp();
     }
 

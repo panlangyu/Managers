@@ -28,11 +28,24 @@
                                                 <#NameCon id="account" name="用户名称" placeholder="账号/姓名/手机号"/>
                                             </div>
                                             <div class="col-lg-4 col-sm-6">
-                                                <#TimeCon id="beginTime" name="注册开始日期" isTime="false" pattern="YYYY-MM-DD"/>
+                                                <#TimeCon id="beginTime" name="开始日期" isTime="false" pattern="YYYY-MM-DD"/>
                                             </div>
                                             <div class="col-lg-4 col-sm-6">
-                                                <#TimeCon id="endTime" name="注册结束日期" isTime="false" pattern="YYYY-MM-DD"/>
+                                                <#TimeCon id="endTime" name="结束日期" isTime="false" pattern="YYYY-MM-DD"/>
                                             </div>
+                                            <div class="col-lg-4 col-sm-6">
+                                                <#SelectCon id="sex" name="产品类别" >
+                                                    <option value="0">请选择</option>
+                                                    <option value="1">BTC</option>
+                                                    <option value="2">ETH</option>
+                                                    <option value="3">USDT</option>
+                                                    <option value="4">EOS</option>
+                                                </#SelectCon>
+
+                                            </div>
+
+
+
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-sm-3">

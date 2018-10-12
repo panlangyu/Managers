@@ -23,7 +23,8 @@ public interface RecordMapper extends Mapper<User> {
      * @date 2017年2月12日 下午9:14:34
      */
     List<Map<String, Object>> selectRecordInfo( @Param("name") String name, @Param("beginTime") String beginTime,
-                                          @Param("endTime") String endTime, @Param("deptid") Integer deptid, @Param("id") Integer id);
+                                          @Param("endTime") String endTime, @Param("deptid") Integer deptid,
+                                                @Param("id") Integer id,@Param("sex") Integer sex);
 
     /** 添加用户投资记录 **/
     Integer insertRecordInfo(Record record);
