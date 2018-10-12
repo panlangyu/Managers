@@ -32,6 +32,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import javax.naming.NoPermissionException;
@@ -411,7 +412,7 @@ public class UserMgrController extends BaseController {
         //判断账户是否存在
         if(StringUtils.isNotBlank(zhanghu)){
 
-            //验证是否是当前用户修改,就不用去查直接方形
+            //验证是否是当前用户修改,就不用去查直接放行
             if(account.equals(zhanghu)){
 
                 return map;
@@ -441,6 +442,7 @@ public class UserMgrController extends BaseController {
 
         if (theUser != null) {
 
+
             map.put("code",1001);
             map.put("type","error");
             map.put("data","用户名已存在");
@@ -453,6 +455,8 @@ public class UserMgrController extends BaseController {
         map.put("data","用户名可以使用");
         return map;
     }
+
+
 
 
 
