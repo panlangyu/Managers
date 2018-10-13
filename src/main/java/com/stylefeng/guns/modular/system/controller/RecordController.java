@@ -101,7 +101,14 @@ public class RecordController extends BaseController {
     @Permission
     @ResponseBody
     public Object list(@RequestParam(required = false) String account, @RequestParam(required = false) String beginTime,
-                       @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer deptid,@RequestParam(required = false)Integer sex) {
+                       @RequestParam(required = false) String endTime, @RequestParam(required = false) Integer deptid,
+                       @RequestParam(required = false)Integer sex,@RequestParam(required = false)Integer bumenId) {
+
+        if(bumenId != null && bumenId != 0){
+
+            deptid = bumenId;
+        }
+
         Integer userId = ShiroKit.getUser().getId();
         //User user = userMapper.selectByPrimaryKey(userId);
         //DataScope dataScope = new DataScope(ShiroKit.getDeptDataScope(user));

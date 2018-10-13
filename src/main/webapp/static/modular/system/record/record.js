@@ -140,8 +140,29 @@ RecordInfo.resetSearch = function () {
 RecordInfo.search = function () {
     var queryData = {};
 
+    var deptid = RecordInfo.deptid;
+    var bumenId = $("#bumenId").val();
+
+
+    var yincang = $("#yinname").val();
+
+    if(yincang == "admin"){
+
+        if(bumenId != 0){
+
+            if(deptid != bumenId ){
+
+                Feng.error("请选择同样的产品名称!");
+                return;
+            }
+        }
+
+    }
+
+
 
     queryData['deptid'] = RecordInfo.deptid;
+    queryData['bumenId'] = $("#bumenId").val();
     queryData['account'] = $("#account").val();
     queryData['beginTime'] = $("#beginTime").val();
     queryData['endTime'] = $("#endTime").val();
